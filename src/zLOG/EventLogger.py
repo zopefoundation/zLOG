@@ -20,6 +20,7 @@ This uses Vinay Sajip's PEP 282 logging module.
 __version__='$Revision$'[11:-2]
 
 import logging
+import six
 import time
 
 # XXX Defining custom levels needs to move to
@@ -50,7 +51,7 @@ def log_write(subsystem, severity, summary, detail, error):
 
     if isinstance(error, tuple):
         try:
-            raise error[0], error[1], error[2]
+            six.reraise(error[0], error[1], error[2])
         except:
             pass
 

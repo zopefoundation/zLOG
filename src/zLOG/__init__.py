@@ -80,6 +80,7 @@ somewhere else.
 
 from EventLogger import log_write, log_time, severity_string
 from traceback import format_exception
+import six
 
 # Standard severities
 TRACE   = -300
@@ -134,7 +135,7 @@ def LOG(subsystem, severity, summary, detail='', error=None, reraise=None):
     """
     log_write(subsystem, severity, summary, detail, error)
     if reraise and error:
-        raise error[0], error[1], error[2]
+        six.reraise(error[0], error[1], error[2])
 
 _subsystems = []
 def register_subsystem(subsystem):
