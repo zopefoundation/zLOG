@@ -123,7 +123,7 @@ class EventLogTest(unittest.TestCase):
         self.setLog()
         try:
             1 / 0
-        except ZeroDivisionError, err:
+        except ZeroDivisionError as err:
             err = sys.exc_info()
 
         zLOG.LOG("basic", zLOG.INFO, "summary")
