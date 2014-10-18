@@ -11,10 +11,15 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Setup for the Acquisition egg package
+"""Setup for the zLOG egg package
 """
-import os
 from setuptools import setup, find_packages
+
+with open('README.rst') as f:
+    README = f.read()
+
+with open('CHANGES.rst') as f:
+    CHANGES = f.read()
 
 setup(name='zLOG',
       version = '2.12.0',
@@ -23,15 +28,9 @@ setup(name='zLOG',
       description='A general logging facility',
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
-      long_description="""
-This package provides a general logging facility that, at this point,
-is just a small shim over Python's logging module.  Therefore, unless
-you need to support a legacy package from the Zope 2 world, you're
-probably better off using Python's logging module.""",
-      
+      long_description='\n\n'.join([README,CHANGES]),
       packages=find_packages('src'),
       package_dir={'': 'src'},
-
       install_requires=['ZConfig >= 2.9.2'],
       include_package_data=True,
       zip_safe=False,
