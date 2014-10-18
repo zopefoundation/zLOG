@@ -4,6 +4,9 @@ dist
 lib
 parts
 .tox
+.coverage
+coverage.xml
+nosetests.xml
 
 *.dll
 *.pyc
