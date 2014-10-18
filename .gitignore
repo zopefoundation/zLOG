@@ -3,8 +3,10 @@ build
 dist
 lib
 parts
+.tox
 
 *.dll
 *.pyc
 *.pyo
 *.so
+*.egg-info
