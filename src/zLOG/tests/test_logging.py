@@ -16,7 +16,13 @@
 import logging
 import unittest
 
-from ZConfig.components.logger.tests.test_logger import LoggingTestBase
+try:
+    from ZConfig.components.logger.tests.test_logger import LoggingTestBase
+except ImportError:  # newer ZConfig, emulate older base
+    from ZConfig.components.logger.tests.test_logger import LoggingTestHelper
+
+    class LoggingTestBase(LoggingTestHelper, unittest.TestCase):
+        pass
 
 import zLOG
 
