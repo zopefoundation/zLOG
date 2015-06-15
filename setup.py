@@ -17,7 +17,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name='zLOG',
-      version = '2.11.2',
+      version = '2.11.3.dev0',
       url='http://cheeseshop.python.org/pypi/zLOG',
       license='ZPL 2.1',
       description='A general logging facility',
