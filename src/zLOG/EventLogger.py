@@ -33,14 +33,14 @@ logging.addLevelName("BLATHER", CUSTOM_BLATHER)
 logging.addLevelName("TRACE", CUSTOM_TRACE)
 
 try:
-   # Python 2.7 & 3
+   # Python 3
    Exception.with_traceback
 
    def fmt_raise(error):
        raise error[0](error[1]).with_traceback(error[2])
 
 except AttributeError:
-   # Python 2.6
+   # Python 2
    def fmt_raise(error):
        return error[0], error[1], error[2]
 
