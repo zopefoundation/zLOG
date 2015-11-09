@@ -5,7 +5,7 @@ python:
     - 3.4
     - 3.5
 install:
-    - python bootstrap.py
+    - python bootstrap-buildout.py
     - bin/buildout
 script:
     - bin/test -v1
