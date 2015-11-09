@@ -5,6 +5,7 @@ dist
 lib
 parts
 /src/zope.testrunner
+.eggs
 .tox
 .coverage
 .installed.cfg
