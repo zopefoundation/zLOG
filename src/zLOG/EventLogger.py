@@ -32,6 +32,18 @@ CUSTOM_TRACE = 5 # Mapping for zLOG.TRACE
 logging.addLevelName("BLATHER", CUSTOM_BLATHER)
 logging.addLevelName("TRACE", CUSTOM_TRACE)
 
+try:
+   # Python 2.7 & 3
+   Exception.with_traceback
+
+   def fmt_raise(error):
+       raise error[0](error[1]).with_traceback(error[2])
+
+except AttributeError:
+   # Python 2.6
+   def fmt_raise(error):
+       return error[0], error[1], error[2]
+
 
 def log_write(subsystem, severity, summary, detail, error):
     level = (zlog_to_pep282_severity_cache_get(severity) or
@@ -43,14 +55,13 @@ def log_write(subsystem, severity, summary, detail, error):
 
     logger = logging.getLogger(subsystem)
 
-
     # Since the logging module of Python does not allow to pass a
     # traceback triple, we need to fake the exception. (See also
     # Collector #1234).
 
     if isinstance(error, tuple):
         try:
-            raise error[0](error[1]).with_traceback(error[2])
+            raise fmt_raise(error)
         except:
             pass
 

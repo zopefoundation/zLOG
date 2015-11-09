@@ -79,6 +79,7 @@ somewhere else.
 """
 
 from zLOG.EventLogger import log_write, log_time, severity_string
+from zLOG.EventLogger import fmt_raise
 from traceback import format_exception
 
 # Standard severities
@@ -134,7 +135,7 @@ def LOG(subsystem, severity, summary, detail='', error=None, reraise=None):
     """
     log_write(subsystem, severity, summary, detail, error)
     if reraise and error:
-        raise error[0](error[1]).with_traceback(error[2])
+        raise fmt_raise(error)
 
 _subsystems = []
 def register_subsystem(subsystem):
