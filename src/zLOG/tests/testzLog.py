@@ -41,12 +41,12 @@ class EventLogTest(unittest.TestCase):
         # tearDown() will close and remove all the handlers that pop
         # into existence after setUp() runs.  This breaks into internals,
         # but I couldn't find a sane way to do it.
-        self.handlers = list(logging._handlers.keys())  # capture current handlers
+        self.handlers = list(logging._handlers)  # capture current handlers
 
     def tearDown(self):
         # Close and remove all the handlers that came into existence
         # since setUp ran.
-        for h in list(logging._handlers.keys()):
+        for h in list(logging._handlers):
             if h not in self.handlers:
                 h.close()
                 del logging._handlers[h]
