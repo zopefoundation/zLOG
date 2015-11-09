@@ -1,12 +1,14 @@
 bin
 build
+/develop-eggs/
 dist
 lib
 parts
-/develop-eggs/
+/src/zope.testrunner
 .tox
 .coverage
 .installed.cfg
+.mr.developer.cfg
 coverage.xml
 nosetests.xml
 
