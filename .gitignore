@@ -3,8 +3,10 @@ build
 dist
 lib
 parts
+/develop-eggs/
 .tox
 .coverage
+.installed.cfg
 coverage.xml
 nosetests.xml
 

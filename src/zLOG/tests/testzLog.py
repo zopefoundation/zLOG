@@ -41,12 +41,12 @@ class EventLogTest(unittest.TestCase):
         # tearDown() will close and remove all the handlers that pop
         # into existence after setUp() runs.  This breaks into internals,
         # but I couldn't find a sane way to do it.
-        self.handlers = logging._handlers.keys()  # capture current handlers
+        self.handlers = list(logging._handlers.keys())  # capture current handlers
 
     def tearDown(self):
         # Close and remove all the handlers that came into existence
         # since setUp ran.
-        for h in logging._handlers.keys():
+        for h in list(logging._handlers.keys()):
             if h not in self.handlers:
                 h.close()
                 del logging._handlers[h]
@@ -72,19 +72,19 @@ class EventLogTest(unittest.TestCase):
         if time is not None:
             self.assertEqual(_time, time)
         if subsys is not None:
-            self.assert_(rest.find(subsys) != -1, "subsystem mismatch")
+            self.assertNotEqual(rest.find(subsys), -1, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
             s = severity_string[severity]
-            self.assert_(rest.find(s) != -1, "severity mismatch")
+            self.assertNotEqual(rest.find(s), -1, "severity mismatch")
         if summary is not None:
-            self.assert_(rest.find(summary) != -1, "summary mismatch")
+            self.assertNotEqual(rest.find(summary), -1, "summary mismatch")
         if detail is not None:
             line = f.readline()
-            self.assert_(line.find(detail) != -1, "missing detail")
+            self.assertNotEqual(line.find(detail), -1, "missing detail")
         if error is not None:
             line = f.readline().strip()
-            self.assert_(line.startswith('Traceback'),
-                         "missing traceback")
+            self.assertTrue(line.startswith('Traceback'),
+                            "missing traceback")
             last = "%s: %s" % (error[0], error[1])
             if last.startswith("exceptions."):
                 last = last[len("exceptions."):]
@@ -123,7 +123,7 @@ class EventLogTest(unittest.TestCase):
         self.setLog()
         try:
             1 / 0
-        except ZeroDivisionError, err:
+        except ZeroDivisionError as err:
             err = sys.exc_info()
 
         zLOG.LOG("basic", zLOG.INFO, "summary")
