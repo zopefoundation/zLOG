@@ -29,11 +29,12 @@ severity_string = {
      300: 'PANIC',
     }
 
+
 class EventLogTest(unittest.TestCase):
     """Test zLOG with the default implementation."""
 
     def setUp(self):
-        self.path = tempfile.mktemp()
+        self.path = tempfile.mkstemp()[1]
         self._severity = 0
         # Windows cannot remove a file that's open.  The logging code
         # keeps the log file open, and I can't find an advertised API
@@ -51,12 +52,18 @@ class EventLogTest(unittest.TestCase):
                 h.close()
                 del logging._handlers[h]
         os.remove(self.path)
-        zLOG.initialize()
 
     def setLog(self, severity=0):
-        # XXX Need to write new logging initialization code here!
+        logger = logging.getLogger('basic')
+        logger.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            fmt='------\n%(asctime)s %(name)s %(levelname)s %(message)s',
+            datefmt='%Y-%m-%dT%H:%M:%S')
+        handler = logging.FileHandler(self.path)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
         self._severity = severity
-        zLOG.initialize()
 
     def verifyEntry(self, f, time=None, subsys=None, severity=None,
                     summary=None, detail=None, error=None):
@@ -72,12 +79,12 @@ class EventLogTest(unittest.TestCase):
         if time is not None:
             self.assertEqual(_time, time)
         if subsys is not None:
-            self.assertNotEqual(rest.find(subsys), -1, "subsystem mismatch")
+            self.assertIn(subsys, rest, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
             s = severity_string[severity]
-            self.assertNotEqual(rest.find(s), -1, "severity mismatch")
+            self.assertIn(s, rest, "severity mismatch")
         if summary is not None:
-            self.assertNotEqual(rest.find(summary), -1, "summary mismatch")
+            self.assertIn(summary, rest, "summary mismatch")
         if detail is not None:
             line = f.readline()
             self.assertNotEqual(line.find(detail), -1, "missing detail")
@@ -85,7 +92,7 @@ class EventLogTest(unittest.TestCase):
             line = f.readline().strip()
             self.assertTrue(line.startswith('Traceback'),
                             "missing traceback")
-            last = "%s: %s" % (error[0], error[1])
+            last = "%s: %s" % (error[0].__name__, error[1])
             if last.startswith("exceptions."):
                 last = last[len("exceptions."):]
             while 1:
@@ -98,51 +105,29 @@ class EventLogTest(unittest.TestCase):
                     break
 
     def getLogFile(self):
-        return open(self.path, 'rb')
+        return open(self.path, 'r')
 
-    def checkBasics(self):
+    def test_basics(self):
         self.setLog()
         zLOG.LOG("basic", zLOG.INFO, "summary")
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
-        finally:
-            f.close()
 
-    def checkDetail(self):
+    def test_detail(self):
         self.setLog()
         zLOG.LOG("basic", zLOG.INFO, "xxx", "this is a detail")
-
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", detail="detail")
-        finally:
-            f.close()
 
-    def checkError(self):
+    def test_error(self):
         self.setLog()
         try:
             1 / 0
-        except ZeroDivisionError as err:
+        except ZeroDivisionError:
             err = sys.exc_info()
 
         zLOG.LOG("basic", zLOG.INFO, "summary")
         zLOG.LOG("basic", zLOG.ERROR, "raised exception", error=err)
-
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
-            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR,
-                             error=err)
-        finally:
-            f.close()
-
-
-def test_suite():
-    return unittest.TestSuite()
-    return unittest.makeSuite(EventLogTest, 'check')
-
-if __name__ == "__main__":
-    loader = unittest.TestLoader()
-    loader.testMethodPrefix = "check"
-    unittest.main(testLoader=loader)
+            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)

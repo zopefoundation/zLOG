@@ -17,8 +17,6 @@ A logging module which handles event messages.
 This uses Vinay Sajip's PEP 282 logging module.
 """
 
-__version__='$Revision$'[11:-2]
-
 import logging
 import time
 
@@ -54,18 +52,7 @@ def log_write(subsystem, severity, summary, detail, error):
         msg = "%s\n%s" % (msg, detail)
 
     logger = logging.getLogger(subsystem)
-
-    # Since the logging module of Python does not allow to pass a
-    # traceback triple, we need to fake the exception. (See also
-    # Collector #1234).
-
-    if isinstance(error, tuple):
-        try:
-            raise fmt_raise(error)
-        except:
-            pass
-
-    logger.log(level, msg, exc_info=(error is not None))
+    logger.log(level, msg, exc_info=error)
 
 
 def severity_string(severity, mapping={
