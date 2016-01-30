@@ -34,23 +34,13 @@ class EventLogTest(unittest.TestCase):
     """Test zLOG with the default implementation."""
 
     def setUp(self):
-        self.path = tempfile.mkstemp()[1]
+        self.f, self.path = tempfile.mkstemp()
         self._severity = 0
-        # Windows cannot remove a file that's open.  The logging code
-        # keeps the log file open, and I can't find an advertised API
-        # to tell the logger to close a log file.  So here we cheat:
-        # tearDown() will close and remove all the handlers that pop
-        # into existence after setUp() runs.  This breaks into internals,
-        # but I couldn't find a sane way to do it.
-        self.handlers = list(logging._handlers.keys())  # capture current handlers
+        self.loghandler = self.setLog()
 
     def tearDown(self):
-        # Close and remove all the handlers that came into existence
-        # since setUp ran.
-        for h in list(logging._handlers.keys()):
-            if h not in self.handlers:
-                h.close()
-                del logging._handlers[h]
+        self.loghandler.close()
+        os.close(self.f)
         os.remove(self.path)
 
     def setLog(self, severity=0):
@@ -64,6 +54,7 @@ class EventLogTest(unittest.TestCase):
         logger.addHandler(handler)
 
         self._severity = severity
+        return handler
 
     def verifyEntry(self, f, time=None, subsys=None, severity=None,
                     summary=None, detail=None, error=None):
@@ -108,19 +99,16 @@ class EventLogTest(unittest.TestCase):
         return open(self.path, 'r')
 
     def test_basics(self):
-        self.setLog()
         zLOG.LOG("basic", zLOG.INFO, "summary")
         with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
 
     def test_detail(self):
-        self.setLog()
         zLOG.LOG("basic", zLOG.INFO, "xxx", "this is a detail")
         with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", detail="detail")
 
     def test_error(self):
-        self.setLog()
         try:
             1 / 0
         except ZeroDivisionError:
