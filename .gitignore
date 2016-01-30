@@ -1,6 +1,7 @@
 bin
 build
 /develop-eggs/
+/eggs
 dist
 lib
 parts
