@@ -131,3 +131,23 @@ class EventLogTest(unittest.TestCase):
         with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
             self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)
+
+    def test_reraise_error(self):
+        self.setLog()
+        try:
+            1 / 0
+        except ZeroDivisionError:
+            err = sys.exc_info()
+
+        self.assertRaises(ZeroDivisionError, zLOG.LOG, "basic", zLOG.ERROR,
+                          "raised exception", error=err, reraise=True)
+        with self.getLogFile() as f:
+            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)
+
+    def test_bbb(self):
+        """ test existence of backwards compatibility methods that do nothing
+        """
+        zLOG.initialize()
+        zLOG.set_initializer(lambda :False)
+        zLOG.register_subsystem('foo')
+        self.assertTrue('foo' in zLOG._subsystems)
