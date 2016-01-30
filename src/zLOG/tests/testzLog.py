@@ -15,6 +15,7 @@
 import os
 import sys
 import tempfile
+import time
 import unittest
 import zLOG
 import logging
@@ -60,15 +61,8 @@ class EventLogTest(unittest.TestCase):
                     summary=None, detail=None, error=None):
         # skip to the beginning of next entry
         line = f.readline().strip()
-        while line != "------":
-            if not line:
-                self.fail("can't find entry in log file")
-            line = f.readline()
-
         line = f.readline().strip()
         _time, rest = line.split(" ", 1)
-        if time is not None:
-            self.assertEqual(_time, time)
         if subsys is not None:
             self.assertIn(subsys, rest, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
@@ -84,16 +78,6 @@ class EventLogTest(unittest.TestCase):
             self.assertTrue(line.startswith('Traceback'),
                             "missing traceback")
             last = "%s: %s" % (error[0].__name__, error[1])
-            if last.startswith("exceptions."):
-                last = last[len("exceptions."):]
-            while 1:
-                line = f.readline().strip()
-                if not line:
-                    self.fail("couldn't find end of traceback")
-                if line == "------":
-                    self.fail("couldn't find end of traceback")
-                if line == last:
-                    break
 
     def getLogFile(self):
         return open(self.path, 'r')
@@ -139,3 +123,14 @@ class EventLogTest(unittest.TestCase):
         zLOG.set_initializer(lambda :False)
         zLOG.register_subsystem('foo')
         self.assertTrue('foo' in zLOG._subsystems)
+
+    def test_severity_string(self):
+        # severity in mapping
+        self.assertEqual(zLOG.severity_string(100), 'PROBLEM(100)')
+        # severity not in mapping
+        self.assertEqual(zLOG.severity_string(99), '(99)')
+
+    def test_log_time(self):
+        now = time.localtime()
+        self.assertTrue(zLOG.log_time().startswith(
+            '%4.4d-%2.2d-%2.2dT' % time.localtime()[:3]))
