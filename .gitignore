@@ -12,6 +12,7 @@ parts
 .mr.developer.cfg
 coverage.xml
 nosetests.xml
+htmlcov
 
 *.dll
 *.pyc
