@@ -13,6 +13,8 @@ Unreleased
 - Normalize package structure (``README.rst``, ``CHANGES.rst``).  Synthesize
   package description from README.rst and CHANGES.rst.
 
+- Use nose for testing instead of zope.testrunner and test
+  for 100% test coverage
 
 2.12.0 (2012-08-30)
 -------------------

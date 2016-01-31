@@ -8,6 +8,6 @@ install:
     - python bootstrap-buildout.py
     - bin/buildout
 script:
-    - bin/test -v1
+    - bin/nosetests --with-coverage --cover-package=zLOG --cover-min-percentage=100%
 notifications:
     email: false
