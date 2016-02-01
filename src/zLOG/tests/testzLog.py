@@ -15,6 +15,7 @@
 import os
 import sys
 import tempfile
+import time
 import unittest
 import zLOG
 import logging
@@ -29,120 +30,107 @@ severity_string = {
      300: 'PANIC',
     }
 
+
 class EventLogTest(unittest.TestCase):
     """Test zLOG with the default implementation."""
 
     def setUp(self):
-        self.path = tempfile.mktemp()
+        self.f, self.path = tempfile.mkstemp()
         self._severity = 0
-        # Windows cannot remove a file that's open.  The logging code
-        # keeps the log file open, and I can't find an advertised API
-        # to tell the logger to close a log file.  So here we cheat:
-        # tearDown() will close and remove all the handlers that pop
-        # into existence after setUp() runs.  This breaks into internals,
-        # but I couldn't find a sane way to do it.
-        self.handlers = logging._handlers.keys()  # capture current handlers
+        self.loghandler = self.setLog()
 
     def tearDown(self):
-        # Close and remove all the handlers that came into existence
-        # since setUp ran.
-        for h in logging._handlers.keys():
-            if h not in self.handlers:
-                h.close()
-                del logging._handlers[h]
+        self.loghandler.close()
+        os.close(self.f)
         os.remove(self.path)
-        zLOG.initialize()
 
     def setLog(self, severity=0):
-        # XXX Need to write new logging initialization code here!
+        logger = logging.getLogger('basic')
+        logger.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            fmt='------\n%(asctime)s %(name)s %(levelname)s %(message)s',
+            datefmt='%Y-%m-%dT%H:%M:%S')
+        handler = logging.FileHandler(self.path)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
         self._severity = severity
-        zLOG.initialize()
+        return handler
 
     def verifyEntry(self, f, time=None, subsys=None, severity=None,
                     summary=None, detail=None, error=None):
         # skip to the beginning of next entry
         line = f.readline().strip()
-        while line != "------":
-            if not line:
-                self.fail("can't find entry in log file")
-            line = f.readline()
-
         line = f.readline().strip()
         _time, rest = line.split(" ", 1)
-        if time is not None:
-            self.assertEqual(_time, time)
         if subsys is not None:
-            self.assert_(rest.find(subsys) != -1, "subsystem mismatch")
+            self.assertIn(subsys, rest, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
             s = severity_string[severity]
-            self.assert_(rest.find(s) != -1, "severity mismatch")
+            self.assertIn(s, rest, "severity mismatch")
         if summary is not None:
-            self.assert_(rest.find(summary) != -1, "summary mismatch")
+            self.assertIn(summary, rest, "summary mismatch")
         if detail is not None:
             line = f.readline()
-            self.assert_(line.find(detail) != -1, "missing detail")
+            self.assertNotEqual(line.find(detail), -1, "missing detail")
         if error is not None:
             line = f.readline().strip()
-            self.assert_(line.startswith('Traceback'),
-                         "missing traceback")
-            last = "%s: %s" % (error[0], error[1])
-            if last.startswith("exceptions."):
-                last = last[len("exceptions."):]
-            while 1:
-                line = f.readline().strip()
-                if not line:
-                    self.fail("couldn't find end of traceback")
-                if line == "------":
-                    self.fail("couldn't find end of traceback")
-                if line == last:
-                    break
+            self.assertTrue(line.startswith('Traceback'),
+                            "missing traceback")
+            last = "%s: %s" % (error[0].__name__, error[1])
 
     def getLogFile(self):
-        return open(self.path, 'rb')
+        return open(self.path, 'r')
 
-    def checkBasics(self):
-        self.setLog()
+    def test_basics(self):
         zLOG.LOG("basic", zLOG.INFO, "summary")
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
-        finally:
-            f.close()
 
-    def checkDetail(self):
-        self.setLog()
+    def test_detail(self):
         zLOG.LOG("basic", zLOG.INFO, "xxx", "this is a detail")
-
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", detail="detail")
-        finally:
-            f.close()
 
-    def checkError(self):
-        self.setLog()
+    def test_error(self):
         try:
             1 / 0
-        except ZeroDivisionError, err:
+        except ZeroDivisionError:
             err = sys.exc_info()
 
         zLOG.LOG("basic", zLOG.INFO, "summary")
         zLOG.LOG("basic", zLOG.ERROR, "raised exception", error=err)
-
-        f = self.getLogFile()
-        try:
+        with self.getLogFile() as f:
             self.verifyEntry(f, subsys="basic", summary="summary")
-            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR,
-                             error=err)
-        finally:
-            f.close()
+            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)
 
+    def test_reraise_error(self):
+        self.setLog()
+        try:
+            1 / 0
+        except ZeroDivisionError:
+            err = sys.exc_info()
 
-def test_suite():
-    return unittest.TestSuite()
-    return unittest.makeSuite(EventLogTest, 'check')
+        self.assertRaises(ZeroDivisionError, zLOG.LOG, "basic", zLOG.ERROR,
+                          "raised exception", error=err, reraise=True)
+        with self.getLogFile() as f:
+            self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)
 
-if __name__ == "__main__":
-    loader = unittest.TestLoader()
-    loader.testMethodPrefix = "check"
-    unittest.main(testLoader=loader)
+    def test_bbb(self):
+        """ test existence of backwards compatibility methods that do nothing
+        """
+        zLOG.initialize()
+        zLOG.set_initializer(lambda :False)
+        zLOG.register_subsystem('foo')
+        self.assertTrue('foo' in zLOG._subsystems)
+
+    def test_severity_string(self):
+        # severity in mapping
+        self.assertEqual(zLOG.severity_string(100), 'PROBLEM(100)')
+        # severity not in mapping
+        self.assertEqual(zLOG.severity_string(99), '(99)')
+
+    def test_log_time(self):
+        now = time.localtime()
+        self.assertTrue(zLOG.log_time().startswith(
+            '%4.4d-%2.2d-%2.2dT' % time.localtime()[:3]))

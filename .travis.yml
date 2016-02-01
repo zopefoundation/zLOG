@@ -2,10 +2,12 @@ language: python
 sudo: false
 python:
     - 2.7
+    - 3.4
+    - 3.5
 install:
-    - python bootstrap.py
+    - python bootstrap-buildout.py
     - bin/buildout
 script:
-    - bin/test -v1
+    - bin/nosetests --with-coverage --cover-package=zLOG --cover-min-percentage=100%
 notifications:
     email: false

@@ -53,10 +53,3 @@ class LoggingIntegrationTestCase(LoggingTestHelper, unittest.TestCase):
         # in the text that gets logged:
         record.msg.index("summary")
         record.msg.index("detail")
-
-
-def test_suite():
-    return unittest.makeSuite(LoggingIntegrationTestCase)
-
-if __name__ == "__main__":
-    unittest.main(defaultTest="test_suite")

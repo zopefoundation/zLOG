@@ -1,12 +1,19 @@
 bin
 build
+/develop-eggs/
+/eggs
 dist
 lib
 parts
+/src/zope.testrunner
+.eggs
 .tox
 .coverage
+.installed.cfg
+.mr.developer.cfg
 coverage.xml
 nosetests.xml
+htmlcov
 
 *.dll
 *.pyc
