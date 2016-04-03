@@ -1,20 +1,20 @@
 Changelog
 =========
 
-Unreleased
-----------
+3.0 (unreleased)
+----------------
 
 - Add coverage testing.
 
-- Add Python 3 compatibility.
+- Add Python 3.3 - 3.5 compatibility.
 
-- Declare currently-supported Python versions (2.6, 2.7), and test them
+- Declare currently-supported Python versions, and test them.
 
-- Normalize package structure (``README.rst``, ``CHANGES.rst``).  Synthesize
+- Normalize package structure (``README.rst``, ``CHANGES.rst``). Synthesize
   package description from README.rst and CHANGES.rst.
 
 - Use nose for testing instead of zope.testrunner and test
-  for 100% test coverage
+  for 100% test coverage.
 
 2.12.0 (2012-08-30)
 -------------------
