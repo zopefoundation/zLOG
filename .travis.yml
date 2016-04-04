@@ -12,3 +12,7 @@ script:
     - bin/nosetests --with-coverage --cover-package=zLOG --cover-min-percentage=100%
 notifications:
     email: false
+cache:
+  pip: true
+  directories:
+    - eggs/
