@@ -63,7 +63,7 @@ class EventLogTest(unittest.TestCase):
         line = f.readline().strip()
         line = f.readline().strip()
         _time, rest = line.split(" ", 1)
-        if subsys is not None:
+        if subsys is not None:  # pragma: no cover
             self.assertIn(subsys, rest, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
             s = severity_string[severity]
@@ -120,7 +120,7 @@ class EventLogTest(unittest.TestCase):
         """ test existence of backwards compatibility methods that do nothing
         """
         zLOG.initialize()
-        zLOG.set_initializer(lambda :False)
+        zLOG.set_initializer(lambda :False)  # pragma: no cover
         zLOG.register_subsystem('foo')
         self.assertTrue('foo' in zLOG._subsystems)
 

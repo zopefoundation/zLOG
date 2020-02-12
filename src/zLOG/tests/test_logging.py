@@ -16,7 +16,7 @@
 import logging
 import unittest
 
-from ZConfig.components.logger.tests.test_logger import LoggingTestHelper
+from ZConfig.components.logger.tests.support import LoggingTestHelper
 
 import zLOG
 
