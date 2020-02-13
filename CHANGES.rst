@@ -8,6 +8,8 @@ Changelog
 
 - Drop support for Python 3.3 and 3.4.
 
+- Flake8 the code.
+
 
 3.0 (2016-04-03)
 ----------------

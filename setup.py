@@ -56,7 +56,7 @@ setup(name='zLOG',
       install_requires=[
           'ZConfig >= 3.4',
       ],
-      extras_require = dict(test=tests_require),
+      extras_require=dict(test=tests_require),
       include_package_data=True,
       zip_safe=False,
       )

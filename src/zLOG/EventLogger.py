@@ -25,22 +25,22 @@ import time
 # logging configuration is activated (the logger factory is called).
 #
 # Custom logging levels
-CUSTOM_BLATHER = 15 # Mapping for zLOG.BLATHER
-CUSTOM_TRACE = 5 # Mapping for zLOG.TRACE
+CUSTOM_BLATHER = 15  # Mapping for zLOG.BLATHER
+CUSTOM_TRACE = 5  # Mapping for zLOG.TRACE
 logging.addLevelName("BLATHER", CUSTOM_BLATHER)
 logging.addLevelName("TRACE", CUSTOM_TRACE)
 
 try:    # pragma: no cover
-   # Python 3
-   Exception.with_traceback
+    # Python 3
+    Exception.with_traceback
 
-   def fmt_raise(error):
-       raise error[0](error[1]).with_traceback(error[2])
+    def fmt_raise(error):
+        raise error[0](error[1]).with_traceback(error[2])
 
 except AttributeError:   # pragma: no cover
-   # Python 2
-   def fmt_raise(error):
-       return error[0], error[1], error[2]
+    # Python 2
+    def fmt_raise(error):
+        return error[0], error[1], error[2]
 
 
 def log_write(subsystem, severity, summary, detail, error):
@@ -56,22 +56,21 @@ def log_write(subsystem, severity, summary, detail, error):
 
 
 def severity_string(severity, mapping={
-    -300: 'TRACE',
-    -200: 'DEBUG',
-    -100: 'BLATHER',
-       0: 'INFO',
-     100: 'PROBLEM',
-     200: 'ERROR',
-     300: 'PANIC',
-    }):
+        -300: 'TRACE',
+        -200: 'DEBUG',
+        -100: 'BLATHER',
+        0: 'INFO',
+        100: 'PROBLEM',
+        200: 'ERROR',
+        300: 'PANIC'}):
     """Convert a severity code to a string."""
     s = mapping.get(int(severity), '')
     return "%s(%s)" % (s, severity)
 
 
 def zlog_to_pep282_severity(zlog_severity):
-    """
-    We map zLOG severities to PEP282 severities here.
+    """We map zLOG severities to PEP282 severities here.
+
     This is how they are mapped:
 
     zLOG severity                      PEP282 severity
@@ -100,6 +99,7 @@ def zlog_to_pep282_severity(zlog_severity):
     if sev >= -200:
         return logging.DEBUG
     return CUSTOM_TRACE
+
 
 zlog_to_pep282_severity_cache = {}
 for _sev in range(-300, 301, 100):
