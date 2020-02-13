@@ -15,7 +15,7 @@
 """
 from setuptools import setup, find_packages
 
-__version__ = '3.1.dev0'
+version = '3.1.dev0'
 
 with open('README.rst') as f:
     README = f.read()
@@ -23,9 +23,13 @@ with open('README.rst') as f:
 with open('CHANGES.rst') as f:
     CHANGES = f.read()
 
+tests_require = [
+    'zope.testrunner',
+]
+
 setup(name='zLOG',
-      version=__version__,
-      url='http://pypi.python.org/pypi/zLOG',
+      version=version,
+      url='https://github.com/zopefoundation/zLOG',
       license='ZPL 2.1',
       description='A general logging facility',
       author='Zope Foundation and Contributors',
@@ -38,9 +42,10 @@ setup(name='zLOG',
           "Operating System :: OS Independent",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2.7",
-          "Programming Language :: Python :: 3.3",
-          "Programming Language :: Python :: 3.4",
           "Programming Language :: Python :: 3.5",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
           "Programming Language :: Python :: Implementation :: CPython",
           "Programming Language :: Python :: Implementation :: PyPy",
           "Framework :: Zope2",
@@ -48,7 +53,10 @@ setup(name='zLOG',
       packages=find_packages('src'),
       package_dir={'': 'src'},
       test_suite='zLOG.tests',
-      install_requires=['ZConfig >= 2.9.2'],
+      install_requires=[
+          'ZConfig >= 3.4',
+      ],
+      extras_require=dict(test=tests_require),
       include_package_data=True,
       zip_safe=False,
       )

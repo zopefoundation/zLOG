@@ -24,11 +24,11 @@ severity_string = {
     -300: 'TRACE',
     -200: 'DEBUG',
     -100: 'BLATHER',
-       0: 'INFO',
-     100: 'PROBLEM',
-     200: 'ERROR',
-     300: 'PANIC',
-    }
+    0: 'INFO',
+    100: 'PROBLEM',
+    200: 'ERROR',
+    300: 'PANIC',
+}
 
 
 class EventLogTest(unittest.TestCase):
@@ -63,7 +63,7 @@ class EventLogTest(unittest.TestCase):
         line = f.readline().strip()
         line = f.readline().strip()
         _time, rest = line.split(" ", 1)
-        if subsys is not None:
+        if subsys is not None:  # pragma: no cover
             self.assertIn(subsys, rest, "subsystem mismatch")
         if severity is not None and severity >= self._severity:
             s = severity_string[severity]
@@ -77,7 +77,6 @@ class EventLogTest(unittest.TestCase):
             line = f.readline().strip()
             self.assertTrue(line.startswith('Traceback'),
                             "missing traceback")
-            last = "%s: %s" % (error[0].__name__, error[1])
 
     def getLogFile(self):
         return open(self.path, 'r')
@@ -117,10 +116,9 @@ class EventLogTest(unittest.TestCase):
             self.verifyEntry(f, subsys="basic", severity=zLOG.ERROR, error=err)
 
     def test_bbb(self):
-        """ test existence of backwards compatibility methods that do nothing
-        """
+        """Test existence of BBB methods that do nothing."""
         zLOG.initialize()
-        zLOG.set_initializer(lambda :False)
+        zLOG.set_initializer(lambda: False)  # pragma: no cover
         zLOG.register_subsystem('foo')
         self.assertTrue('foo' in zLOG._subsystems)
 
@@ -131,6 +129,5 @@ class EventLogTest(unittest.TestCase):
         self.assertEqual(zLOG.severity_string(99), '(99)')
 
     def test_log_time(self):
-        now = time.localtime()
         self.assertTrue(zLOG.log_time().startswith(
             '%4.4d-%2.2d-%2.2dT' % time.localtime()[:3]))

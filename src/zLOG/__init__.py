@@ -78,23 +78,26 @@ somewhere else.
 
 """
 
-from zLOG.EventLogger import log_write, log_time, severity_string
+from zLOG.EventLogger import log_write
+from zLOG.EventLogger import log_time
+from zLOG.EventLogger import severity_string  # noqa: F401
 from zLOG.EventLogger import fmt_raise
-from traceback import format_exception
+from traceback import format_exception  # noqa: F401
 
 # Standard severities
-TRACE   = -300
-DEBUG   = -200
+TRACE = -300
+DEBUG = -200
 BLATHER = -100
-INFO    =    0
-PROBLEM =  100
-WARNING =  100
-ERROR   =  200
-PANIC   =  300
+INFO = 0
+PROBLEM = 100
+WARNING = 100
+ERROR = 200
+PANIC = 300
 
 
 def initialize():
     pass
+
 
 def set_initializer(func):
     """Set the function used to re-initialize the logs.
@@ -137,7 +140,10 @@ def LOG(subsystem, severity, summary, detail='', error=None, reraise=None):
     if reraise and error:
         raise fmt_raise(error)
 
+
 _subsystems = []
+
+
 def register_subsystem(subsystem):
     """Register a subsystem name
 
@@ -145,6 +151,7 @@ def register_subsystem(subsystem):
     subsystems used in an application.
     """
     _subsystems.append(subsystem)
+
 
 # Most apps interested in logging only want the names below.
 __all__ = ['LOG', 'TRACE', 'DEBUG', 'BLATHER', 'INFO', 'PROBLEM',

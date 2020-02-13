@@ -16,7 +16,7 @@
 import logging
 import unittest
 
-from ZConfig.components.logger.tests.test_logger import LoggingTestHelper
+from ZConfig.components.logger.tests.support import LoggingTestHelper
 
 import zLOG
 
@@ -43,7 +43,7 @@ class LoggingIntegrationTestCase(LoggingTestHelper, unittest.TestCase):
         self.logger.addHandler(self.handler)
 
     def test_log_record(self):
-        #log_write(subsystem, severity, summary, detail, error)
+        # log_write(subsystem, severity, summary, detail, error)
         log_write("sample.subsystem", zLOG.WARNING, "summary", "detail", None)
         self.assertEqual(len(self.records), 1)
         record = self.records[0]
