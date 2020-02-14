@@ -1,3 +1,3 @@
 version: ~> 1.0
 language: python
-import: zopefoundation/meta:travis-ci-config/minimal-no-pypy.yml
+import: zopefoundation/meta:config/pure-python-without-pypy/travis.yml
