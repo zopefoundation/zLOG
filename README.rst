@@ -1,5 +1,5 @@
-``zLOG`` 
-========
+zLOG
+====
 
 This package provides a general logging facility that, at this point,
 is just a small shim over Python's logging module.  Therefore, unless
