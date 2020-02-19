@@ -1,3 +1,17 @@
+.. image:: https://travis-ci.org/zopefoundation/zLOG.svg?branch=master
+        :target: https://travis-ci.org/zopefoundation/zLOG
+
+.. image:: https://coveralls.io/repos/github/zopefoundation/zLOG/badge.svg?branch=master
+        :target: https://coveralls.io/github/zopefoundation/zLOG?branch=master
+
+.. image:: https://img.shields.io/pypi/v/zLOG.svg
+        :target: https://pypi.org/project/zLOG/
+        :alt: Current version on PyPI
+
+.. image:: https://img.shields.io/pypi/pyversions/zLOG.svg
+        :target: https://pypi.org/project/zLOG/
+        :alt: Supported Python versions
+
 ``zLOG`` 
 ========
 
