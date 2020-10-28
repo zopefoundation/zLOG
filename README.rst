@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.org/zopefoundation/zLOG.svg?branch=master
-        :target: https://travis-ci.org/zopefoundation/zLOG
+.. image:: https://travis-ci.com/zopefoundation/zLOG.svg?branch=master
+        :target: https://travis-ci.com/zopefoundation/zLOG
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/zLOG/badge.svg?branch=master
         :target: https://coveralls.io/github/zopefoundation/zLOG?branch=master
