@@ -4,7 +4,7 @@ Changelog
 3.1 (unreleased)
 ----------------
 
-- Add support for Python 3.6 up to 3.8.
+- Add support for Python 3.6 up to 3.9.
 
 - Drop support for Python 3.3 and 3.4.
 
