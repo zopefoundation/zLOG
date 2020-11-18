@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.com/zopefoundation/zLOG.svg?branch=master
-        :target: https://travis-ci.com/zopefoundation/zLOG
+.. image:: https://github.com/zopefoundation/zLOG/workflows/tests/badge.svg
+        :target: https://github.com/zopefoundation/zLOG/actions?query=workflow%3Atests
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/zLOG/badge.svg?branch=master
         :target: https://coveralls.io/github/zopefoundation/zLOG?branch=master
@@ -12,7 +12,7 @@
         :target: https://pypi.org/project/zLOG/
         :alt: Supported Python versions
 
-``zLOG`` 
+``zLOG``
 ========
 
 This package provides a general logging facility that, at this point,
