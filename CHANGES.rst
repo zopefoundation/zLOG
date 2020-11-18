@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.1 (unreleased)
+3.1 (2020-11-18)
 ----------------
 
 - Add support for Python 3.6 up to 3.9.
