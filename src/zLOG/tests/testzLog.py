@@ -12,13 +12,15 @@
 #
 ##############################################################################
 
+import logging
 import os
 import sys
 import tempfile
 import time
 import unittest
+
 import zLOG
-import logging
+
 
 severity_string = {
     -300: 'TRACE',
