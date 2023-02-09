@@ -31,17 +31,9 @@ CUSTOM_TRACE = 5  # Mapping for zLOG.TRACE
 logging.addLevelName("BLATHER", CUSTOM_BLATHER)
 logging.addLevelName("TRACE", CUSTOM_TRACE)
 
-try:    # pragma: no cover
-    # Python 3
-    Exception.with_traceback
 
-    def fmt_raise(error):
-        raise error[0](error[1]).with_traceback(error[2])
-
-except AttributeError:   # pragma: no cover
-    # Python 2
-    def fmt_raise(error):
-        return error[0], error[1], error[2]
+def fmt_raise(error):
+    raise error[0](error[1]).with_traceback(error[2])
 
 
 def log_write(subsystem, severity, summary, detail, error):
@@ -50,7 +42,7 @@ def log_write(subsystem, severity, summary, detail, error):
 
     msg = summary
     if detail:
-        msg = "%s\n%s" % (msg, detail)
+        msg = "{}\n{}".format(msg, detail)
 
     logger = logging.getLogger(subsystem)
     logger.log(level, msg, exc_info=error)
@@ -66,7 +58,7 @@ def severity_string(severity, mapping={
         300: 'PANIC'}):
     """Convert a severity code to a string."""
     s = mapping.get(int(severity), '')
-    return "%s(%s)" % (s, severity)
+    return "{}({})".format(s, severity)
 
 
 def zlog_to_pep282_severity(zlog_severity):

@@ -81,7 +81,7 @@ class EventLogTest(unittest.TestCase):
                             "missing traceback")
 
     def getLogFile(self):
-        return open(self.path, 'r')
+        return open(self.path)
 
     def test_basics(self):
         zLOG.LOG("basic", zLOG.INFO, "summary")
