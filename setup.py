@@ -11,11 +11,13 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Setup for the zLOG egg package
+"""Setup for the zLOG package
 """
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
-version = '3.2.dev0'
+
+version = '4.0.dev0'
 
 with open('README.rst') as f:
     README = f.read()
@@ -33,7 +35,7 @@ setup(name='zLOG',
       license='ZPL 2.1',
       description='A general logging facility',
       author='Zope Foundation and Contributors',
-      author_email='zope-dev@zope.org',
+      author_email='zope-dev@zope.dev',
       long_description='\n\n'.join([README, CHANGES]),
       classifiers=[
           "Development Status :: 5 - Production/Stable",
@@ -41,18 +43,17 @@ setup(name='zLOG',
           "License :: OSI Approved :: Zope Public License",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-          "Programming Language :: Python :: 2.7",
-          "Programming Language :: Python :: 3.5",
-          "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
           "Programming Language :: Python :: 3.8",
           "Programming Language :: Python :: 3.9",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
           "Programming Language :: Python :: Implementation :: CPython",
-          "Framework :: Zope :: 2",
+          "Framework :: Zope :: 5",
       ],
       packages=find_packages('src'),
       package_dir={'': 'src'},
-      test_suite='zLOG.tests',
+      python_requires='>=3.7',
       install_requires=[
           'ZConfig >= 3.4',
       ],

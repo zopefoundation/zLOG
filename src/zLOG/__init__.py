@@ -78,11 +78,13 @@ somewhere else.
 
 """
 
-from zLOG.EventLogger import log_write
-from zLOG.EventLogger import log_time
-from zLOG.EventLogger import severity_string  # noqa: F401
-from zLOG.EventLogger import fmt_raise
 from traceback import format_exception  # noqa: F401
+
+from zLOG.EventLogger import fmt_raise
+from zLOG.EventLogger import log_time
+from zLOG.EventLogger import log_write
+from zLOG.EventLogger import severity_string  # noqa: F401
+
 
 # Standard severities
 TRACE = -300

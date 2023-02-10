@@ -12,13 +12,15 @@
 #
 ##############################################################################
 
+import logging
 import os
 import sys
 import tempfile
 import time
 import unittest
+
 import zLOG
-import logging
+
 
 severity_string = {
     -300: 'TRACE',
@@ -79,7 +81,7 @@ class EventLogTest(unittest.TestCase):
                             "missing traceback")
 
     def getLogFile(self):
-        return open(self.path, 'r')
+        return open(self.path)
 
     def test_basics(self):
         zLOG.LOG("basic", zLOG.INFO, "summary")

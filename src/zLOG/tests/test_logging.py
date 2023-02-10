@@ -19,7 +19,6 @@ import unittest
 from ZConfig.components.logger.tests.support import LoggingTestHelper
 
 import zLOG
-
 from zLOG.EventLogger import log_write
 
 
